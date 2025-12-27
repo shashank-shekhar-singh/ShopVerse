@@ -31,6 +31,11 @@ public class ProductServiceImpl implements ProductService {
         return repository.save(product).getId();
     }
 
+    @Override
+    public ProductResponse updateProduct(ProductRequest request) {
+        return null;
+    }
+
     public ProductResponse findById(Integer id) {
         return repository.findById(id)
                 .map(mapper::toProductResponse)
@@ -73,6 +78,11 @@ public class ProductServiceImpl implements ProductService {
             purchasedProducts.add(mapper.toproductPurchaseResponse(product, productRequest.quantity()));
         }
         return purchasedProducts;
+    }
+
+    @Override
+    public void deleteProduct(Integer id) {
+        repository.deleteById(id);
     }
 
 }
