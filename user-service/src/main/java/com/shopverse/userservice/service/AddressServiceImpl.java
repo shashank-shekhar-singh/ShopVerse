@@ -32,11 +32,7 @@ public class AddressServiceImpl implements AddressService {
     @Override
     public AddressResponse addAddressToUser(UUID userId, AddressRequest request) {
         validateUserExists(userId);
-
-        // If request.default=true, unset existing default for same type
-        if(request.isDefault()) {
-            addressRepository.unsetDefaultAddress(userId, request.type());
-        }
+        handleDefaultAddressIfNeeded(userId,request);
 
         Address address = addressRepository.save(addressMapper.toEntity(request));
         return addressMapper.toResponseDTO(address);
@@ -53,19 +49,56 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     public AddressResponse updateAddress(UUID userId, UUID addressId, AddressRequest request) {
-        return null;
+        validateUserExists(userId);
+        handleDefaultAddressIfNeeded(userId, request);
+        Address address = validateAndReturnIfAddressExists(userId,addressId);
+        if(request.isDefault()) {
+            address.setDefault(true);
+        }
+        if (request.type() != null) {
+            address.setType(request.type());
+        }
+        if (request.line1() != null) {
+            address.setLine1(request.line1());
+        }
+        if (request.city() != null) {
+            address.setCity(request.city());
+        }
+        if (request.state() != null) {
+            address.setState(request.state());
+        }
+        if (request.country() != null) {
+            address.setCountry(request.country());
+        }
+        if (request.pincode() != null) {
+            address.setPincode(request.pincode());
+        }
+        Address updated = addressRepository.save(address);
+        return addressMapper.toResponseDTO(updated);
     }
 
     @Override
     public void deleteAddress(UUID userId, UUID addressId) {
         validateUserExists(userId);
-        Address address = addressRepository.findByIdAndUserId(addressId, userId)
-                .orElseThrow(() -> new AddressNotFoundException(addressId));
+        Address address = validateAndReturnIfAddressExists(userId,addressId);
         addressRepository.delete(address);
     }
 
     private void validateUserExists(UUID userId) {
         userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException(userId));
+    }
+
+    private Address validateAndReturnIfAddressExists(UUID userId, UUID addressId) {
+        return addressRepository
+                .findByIdAndUserId(addressId, userId)
+                .orElseThrow(() -> new AddressNotFoundException(addressId));
+    }
+
+    private void handleDefaultAddressIfNeeded(UUID userId, AddressRequest request) {
+        // If request.default=true, unset existing default for same type
+        if(request.isDefault()) {
+            addressRepository.unsetDefaultAddress(userId, request.type());
+        }
     }
 }
