@@ -1,8 +1,7 @@
 package com.shopverse.userservice.api;
 
-import com.shopverse.userservice.dto.UserRequest;
-import com.shopverse.userservice.dto.UserResponse;
-import com.shopverse.userservice.dto.UserUpdateRequest;
+import com.shopverse.userservice.dto.*;
+import com.shopverse.userservice.service.AddressService;
 import com.shopverse.userservice.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -14,15 +13,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/users")
 public class UserController {
     private final UserService userService;
+    private final AddressService addressService;
 
-    public UserController(UserService service) {
+    public UserController(UserService service, AddressService addressService) {
         this.userService = service;
+        this.addressService = addressService;
     }
 
     @PostMapping
@@ -40,7 +42,7 @@ public class UserController {
     }
 
     @GetMapping
-    public Page<UserResponse> getAllUsers(
+    public ResponseEntity<Page<UserResponse>> getAllUsers(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "id") String sortBy,
@@ -51,7 +53,7 @@ public class UserController {
                 : Sort.by(sortBy).ascending();
 
         Pageable pageable = PageRequest.of(page, size, sort);
-        return userService.getAll(pageable);
+        return ResponseEntity.ok(userService.getAll(pageable));
     }
 
     @PatchMapping("/{id}")
@@ -63,5 +65,30 @@ public class UserController {
     public ResponseEntity<Void> deleteUser(@PathVariable UUID id) {
         userService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{id}/addresses")
+    public ResponseEntity<AddressResponse> addAddress(
+            @PathVariable UUID id,
+            @Valid @RequestBody AddressRequest request) {
+        AddressResponse addressResponse = addressService.addAddressToUser(id, request);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .header(HttpHeaders.LOCATION, "/api/v1/users/" + id + "/addresses/" + addressResponse.id())
+                .body(addressResponse);
+    }
+
+    @GetMapping("/{id}/addresses")
+    public ResponseEntity<List<AddressResponse>> getUserAddresses(@PathVariable UUID id) {
+        List<AddressResponse> addressList = addressService.getAddressesByUserId(id);
+        return ResponseEntity.ok(addressList);
+    }
+
+    @PutMapping("/{userId}/addresses/{addressId}")
+    public ResponseEntity<AddressResponse> updateAddress(
+            @PathVariable UUID userId,
+            @PathVariable UUID addressId,
+            @Valid @RequestBody AddressRequest request) {
+        return ResponseEntity.ok(addressService.updateAddress(userId, addressId, request));
     }
 }
