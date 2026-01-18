@@ -6,7 +6,7 @@ import java.util.UUID;
 
 public record AddressResponse(
         UUID id,
-        UUID customerId,
+        UUID userId,
         AddressType type,
         boolean isDefault,
         String line1,

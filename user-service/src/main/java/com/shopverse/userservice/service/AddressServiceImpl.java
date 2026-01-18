@@ -35,6 +35,7 @@ public class AddressServiceImpl implements AddressService {
         handleDefaultAddressIfNeeded(userId,request);
 
         Address address = addressRepository.save(addressMapper.toEntity(request));
+        address.setUserId(userId);
         return addressMapper.toResponseDTO(address);
     }
 

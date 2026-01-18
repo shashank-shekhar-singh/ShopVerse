@@ -4,6 +4,7 @@ import jakarta.persistence.OptimisticLockException;
 import org.slf4j.MDC;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -16,6 +17,18 @@ import static com.shopverse.userservice.exception.ErrorCode.*;
 public class GlobalExceptionHandler {
 
     public static final String CORRELATION_ID_HEADER = "correlationId";
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ApiError> handleInvalidJson(HttpMessageNotReadableException ex) {
+        return ResponseEntity
+                .badRequest()
+                .body(new ApiError(
+                        VALIDATION_FAILED.name(),
+                        "Invalid request body. Please check enum values.",
+                        MDC.get(CORRELATION_ID_HEADER),
+                        Instant.now()
+                ));
+    }
 
     @ExceptionHandler(OptimisticLockException.class)
     public ResponseEntity<ApiError> handleOptimisticLock() {

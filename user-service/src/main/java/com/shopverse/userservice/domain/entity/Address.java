@@ -18,8 +18,8 @@ import java.util.UUID;
 @Table(name = "addresses")
 public class Address extends BaseEntity{
 
-    @Column(name = "customer_id", nullable = false)
-    private UUID customerId;
+    @Column(name = "user_id", nullable = false)
+    private UUID userId;
 
     @Enumerated(EnumType.STRING)
     private AddressType type;

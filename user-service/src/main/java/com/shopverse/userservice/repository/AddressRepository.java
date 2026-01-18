@@ -20,12 +20,12 @@ public interface AddressRepository extends JpaRepository<Address, UUID> {
     @Query("""
         UPDATE Address a
         SET a.isDefault = false
-        WHERE a.customerId = :customerId
+        WHERE a.userId = :userId
           AND a.type = :type
           AND a.isDefault = true
     """)
     void unsetDefaultAddress(
-            @Param("customerId") UUID customerId,
+            @Param("userId") UUID userId,
             @Param("type") AddressType type
     );
 }

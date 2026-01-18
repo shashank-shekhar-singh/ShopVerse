@@ -4,9 +4,27 @@ server:
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/user_db
-    username: postgres
-    password: postgres
+    username: user_service
+    password: root
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+    user: ${spring.datasource.username}
+    password: ${spring.datasource.password}
   jpa:
     hibernate:
       ddl-auto: validate
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    defer-datasource-initialization: false
     show-sql: true
+
+logging:
+  level:
+    org.flywaydb: DEBUG
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info

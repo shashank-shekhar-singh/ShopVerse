@@ -4,16 +4,21 @@ import com.shopverse.userservice.domain.enums.Gender;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 
 public record UserRequest(
-    @NotBlank
+    @NotBlank(message = "first name is required")
     String firstName,
     String lastName,
-    @NotBlank
+    @Pattern(
+        regexp = "^[789]\\d{9}$",
+        message = "phone number is not valid"
+    )
+    @NotBlank(message = "phone number is required")
     String phone,
-    @Email
-    @NotBlank
+    @Email(message = "email should be valid")
+    @NotBlank(message = "email is required")
     String email,
-    @NotNull
+    @NotNull(message = "gender is required")
     Gender gender
 ) {}
