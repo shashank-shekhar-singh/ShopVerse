@@ -1,6 +1,6 @@
 package com.shopverse.userservice.mapper;
 
-import com.shopverse.userservice.domain.entity.User;
+import com.shopverse.userservice.entity.User;
 import com.shopverse.userservice.dto.UserRequest;
 import com.shopverse.userservice.dto.UserResponse;
 import org.mapstruct.Mapper;

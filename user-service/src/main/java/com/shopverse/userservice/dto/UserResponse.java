@@ -1,7 +1,7 @@
 package com.shopverse.userservice.dto;
 
-import com.shopverse.userservice.domain.enums.AccountStatus;
-import com.shopverse.userservice.domain.enums.Gender;
+import com.shopverse.userservice.enums.AccountStatus;
+import com.shopverse.userservice.enums.Gender;
 
 import java.util.UUID;
 

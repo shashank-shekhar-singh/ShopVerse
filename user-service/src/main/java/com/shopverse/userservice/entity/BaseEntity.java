@@ -1,4 +1,4 @@
-package com.shopverse.userservice.domain.entity;
+package com.shopverse.userservice.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

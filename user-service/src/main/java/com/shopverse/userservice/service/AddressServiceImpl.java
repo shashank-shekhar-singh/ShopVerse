@@ -1,6 +1,6 @@
 package com.shopverse.userservice.service;
 
-import com.shopverse.userservice.domain.entity.Address;
+import com.shopverse.userservice.entity.Address;
 import com.shopverse.userservice.dto.AddressRequest;
 import com.shopverse.userservice.dto.AddressResponse;
 import com.shopverse.userservice.exception.AddressNotFoundException;

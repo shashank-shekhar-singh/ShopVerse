@@ -11,12 +11,13 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.time.Instant;
 
+import static com.shopverse.userservice.config.CorrelationIdFilter.CORRELATION_ID_LOG_KEY;
 import static com.shopverse.userservice.exception.ErrorCode.*;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    public static final String CORRELATION_ID_HEADER = "correlationId";
+//    public static final String CORRELATION_ID_HEADER = "correlationId";
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ApiError> handleInvalidJson(HttpMessageNotReadableException ex) {
@@ -24,8 +25,8 @@ public class GlobalExceptionHandler {
                 .badRequest()
                 .body(new ApiError(
                         VALIDATION_FAILED.name(),
-                        "Invalid request body. Please check enum values.",
-                        MDC.get(CORRELATION_ID_HEADER),
+                        ex.getMessage(),
+                        MDC.get(CORRELATION_ID_LOG_KEY),
                         Instant.now()
                 ));
     }
@@ -37,11 +38,10 @@ public class GlobalExceptionHandler {
                 .body(new ApiError(
                         DATA_CONFLICT.name(),
                         "Data conflict occurred. Please retry.",
-                        MDC.get(CORRELATION_ID_HEADER),
+                        MDC.get(CORRELATION_ID_LOG_KEY),
                         Instant.now()
                 ));
     }
-
 
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<ApiError> handleUserNotFound(
@@ -73,7 +73,7 @@ public class GlobalExceptionHandler {
                                 .getFieldErrors()
                                 .get(0)
                                 .getDefaultMessage(),
-                        MDC.get(CORRELATION_ID_HEADER),
+                        MDC.get(CORRELATION_ID_LOG_KEY),
                         Instant.now()
                 ));
     }
@@ -86,7 +86,7 @@ public class GlobalExceptionHandler {
                 .body(new ApiError(
                         ErrorCode.INTERNAL_ERROR.name(),
                         "Unexpected error occurred",
-                        MDC.get(CORRELATION_ID_HEADER),
+                        MDC.get(CORRELATION_ID_LOG_KEY),
                         Instant.now()
                 ));
     }
@@ -98,7 +98,7 @@ public class GlobalExceptionHandler {
                 .body(new ApiError(
                         ex.getErrorCode().name(),
                         ex.getMessage(),
-                        MDC.get(CORRELATION_ID_HEADER),
+                        MDC.get(CORRELATION_ID_LOG_KEY),
                         Instant.now()
                 ));
     }

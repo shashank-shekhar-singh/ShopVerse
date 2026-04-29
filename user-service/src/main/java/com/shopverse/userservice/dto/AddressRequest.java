@@ -1,10 +1,8 @@
 package com.shopverse.userservice.dto;
 
-import com.shopverse.userservice.domain.enums.AddressType;
+import com.shopverse.userservice.enums.AddressType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
-
-import java.util.UUID;
 
 public record AddressRequest(
     @NotBlank

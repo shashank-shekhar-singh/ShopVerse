@@ -1,7 +1,7 @@
 package com.shopverse.userservice.repository;
 
-import com.shopverse.userservice.domain.entity.Address;
-import com.shopverse.userservice.domain.enums.AddressType;
+import com.shopverse.userservice.entity.Address;
+import com.shopverse.userservice.enums.AddressType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

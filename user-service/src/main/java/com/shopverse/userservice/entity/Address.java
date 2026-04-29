@@ -1,7 +1,7 @@
-package com.shopverse.userservice.domain.entity;
+package com.shopverse.userservice.entity;
 
 
-import com.shopverse.userservice.domain.enums.AddressType;
+import com.shopverse.userservice.enums.AddressType;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.validation.annotation.Validated;

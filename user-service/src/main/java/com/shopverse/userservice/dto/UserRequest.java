@@ -1,6 +1,6 @@
 package com.shopverse.userservice.dto;
 
-import com.shopverse.userservice.domain.enums.Gender;
+import com.shopverse.userservice.enums.Gender;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

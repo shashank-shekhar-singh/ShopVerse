@@ -1,7 +1,7 @@
-package com.shopverse.userservice.domain.entity;
+package com.shopverse.userservice.entity;
 
-import com.shopverse.userservice.domain.enums.AccountStatus;
-import com.shopverse.userservice.domain.enums.Gender;
+import com.shopverse.userservice.enums.AccountStatus;
+import com.shopverse.userservice.enums.Gender;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.*;

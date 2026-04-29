@@ -1,19 +1,20 @@
 package com.shopverse.userservice.service;
 
-import com.shopverse.userservice.domain.entity.User;
+import com.shopverse.userservice.entity.User;
 import com.shopverse.userservice.dto.UserRequest;
 import com.shopverse.userservice.dto.UserResponse;
 import com.shopverse.userservice.dto.UserUpdateRequest;
+import com.shopverse.userservice.messaging.events.UserCreatedEvent;
 import com.shopverse.userservice.exception.DuplicateUserException;
 import com.shopverse.userservice.exception.UserNotFoundException;
 import com.shopverse.userservice.mapper.UserMapper;
+import com.shopverse.userservice.messaging.publisher.UserEventPublisher;
 import com.shopverse.userservice.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -22,10 +23,14 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final UserEventPublisher eventPublisher;
 
-    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper) {
+    public UserServiceImpl(UserRepository userRepository,
+                           UserMapper userMapper,
+                           UserEventPublisher eventPublisher) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
+        this.eventPublisher = eventPublisher;
     }
 
     @Override
@@ -37,6 +42,9 @@ public class UserServiceImpl implements UserService {
                     });
         }
         User user = userRepository.save(userMapper.toEntity(userRequest));
+        eventPublisher.publish(
+                new UserCreatedEvent(user.getId(), user.getEmail(), user.getFirstName(), user.getLastName(), user.getPhone())
+        );
         return userMapper.toResponseDTO(user);
     }
 

@@ -1,6 +1,6 @@
 package com.shopverse.userservice.dto;
 
-import com.shopverse.userservice.domain.enums.AddressType;
+import com.shopverse.userservice.enums.AddressType;
 
 import java.util.UUID;
 

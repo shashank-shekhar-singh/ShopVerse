@@ -1,4 +1,4 @@
-package com.shopverse.userservice.domain.enums;
+package com.shopverse.userservice.enums;
 
 public enum AddressType {
     SHIPPING,

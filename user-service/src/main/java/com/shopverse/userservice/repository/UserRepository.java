@@ -1,6 +1,6 @@
 package com.shopverse.userservice.repository;
 
-import com.shopverse.userservice.domain.entity.User;
+import com.shopverse.userservice.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
