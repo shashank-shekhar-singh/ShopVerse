@@ -1,1 +1,7 @@
 .idea
+.vscode
+.gemini
+graphify-out
+GEMINI.md
+.claude
+/.claude/
