@@ -47,4 +47,7 @@ public class AuthResponse {
         this.roles = roles;
         this.permissions = permissions;
     }
+
+    public AuthResponse(String accessToken, Object o, long accessTokenExpirationMs, String bearer) {
+    }
 }
