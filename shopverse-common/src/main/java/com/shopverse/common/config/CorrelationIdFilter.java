@@ -1,4 +1,4 @@
-package com.shopverse.userservice.config;
+package com.shopverse.common.config;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -11,6 +11,11 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.UUID;
 
+/**
+ * Filter for managing correlation IDs in distributed tracing.
+ * Extracts correlation ID from request header or generates a new one.
+ * Adds correlation ID to MDC for logging and response header.
+ */
 @Component
 public class CorrelationIdFilter extends OncePerRequestFilter {
 
@@ -40,4 +45,3 @@ public class CorrelationIdFilter extends OncePerRequestFilter {
         }
     }
 }
-

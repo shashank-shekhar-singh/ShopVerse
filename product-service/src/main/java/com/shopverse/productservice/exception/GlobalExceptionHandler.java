@@ -1,45 +1,43 @@
 package com.shopverse.productservice.exception;
 
+import com.shopverse.common.exception.AbstractGlobalExceptionHandler;
+import com.shopverse.common.exception.ApiError;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.util.HashMap;
-
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-
 @RestControllerAdvice
-public class GlobalExceptionHandler {
+public class GlobalExceptionHandler extends AbstractGlobalExceptionHandler {
 
     @ExceptionHandler(ProductPurchaseException.class)
-    public ResponseEntity<String> handle(ProductPurchaseException exp) {
-        return ResponseEntity
-                .status(BAD_REQUEST)
-                .body(exp.getMessage());
+    public ResponseEntity<ApiError> handleProductPurchase(
+            ProductPurchaseException ex,
+            HttpServletRequest request) {
+        return buildResponseForDomainException(ex, request);
+    }
+
+    @ExceptionHandler(ProductNotFoundException.class)
+    public ResponseEntity<ApiError> handleProductNotFound(
+            ProductNotFoundException ex,
+            HttpServletRequest request) {
+        return buildResponseForDomainException(ex, request);
     }
 
     @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<String> handle(EntityNotFoundException exp) {
+    public ResponseEntity<ApiError> handleEntityNotFound(
+            EntityNotFoundException ex,
+            HttpServletRequest request) {
         return ResponseEntity
-                .status(BAD_REQUEST)
-                .body(exp.getMessage());
-    }
-
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException exp) {
-        var errors = new HashMap<String, String>();
-        exp.getBindingResult().getAllErrors()
-                .forEach(error -> {
-                    var fieldName = ((FieldError) error).getField();
-                    var errorMessage = error.getDefaultMessage();
-                    errors.put(fieldName, errorMessage);
-                });
-
-        return ResponseEntity
-                .status(BAD_REQUEST)
-                .body(new ErrorResponse(errors));
+                .status(org.springframework.http.HttpStatus.NOT_FOUND)
+                .body(new ApiError(
+                        "PRODUCT_NOT_FOUND",
+                        ex.getMessage(),
+                        org.springframework.http.HttpStatus.NOT_FOUND.value(),
+                        request.getRequestURI(),
+                        null,
+                        java.time.Instant.now()
+                ));
     }
 }

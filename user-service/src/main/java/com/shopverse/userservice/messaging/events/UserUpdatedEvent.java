@@ -6,7 +6,7 @@ import org.slf4j.MDC;
 
 import java.util.UUID;
 
-import static com.shopverse.userservice.config.CorrelationIdFilter.CORRELATION_ID_LOG_KEY;
+import static com.shopverse.common.config.CorrelationIdFilter.CORRELATION_ID_LOG_KEY;
 
 public class UserUpdatedEvent extends BaseEvent {
 
